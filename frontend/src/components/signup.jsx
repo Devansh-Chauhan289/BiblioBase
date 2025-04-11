@@ -1,10 +1,13 @@
 import { useState } from "react"
 import { Button } from "../modules/Button"
 import { Input } from "../modules/input"
+import { useNavigate } from "react-router"
 
 
 export const Signup = () => {
     
+    const navigate = useNavigate()
+
     const [user,setuser] = useState({
         fullname : "",
         email : "",
@@ -18,14 +21,21 @@ export const Signup = () => {
         })
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault()
-        console.log(user);
-        setuser({
-            fullname : "",
-            email : "",
-            password : ""
+        const res = await fetch("http://localhost:5050/user/signup",{
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(user)
         })
+        const data = await res.json()
+        if(res.status == 200){
+            navigate("/login")
+            console.log(data);
+        } 
+        alert(data.msg)
     }
 
     return(

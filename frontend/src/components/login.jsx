@@ -18,14 +18,22 @@ export const Login = () => {
         })
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault()
-        console.log(user);
-        setuser({
-            fullname : "",
-            email : "",
-            password : ""
+        const res = await fetch("http://localhost:5050/user/login",{
+            method : "POST",
+            headers : {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(user)
         })
+        const data = await res.json()
+        if(res.status == 201 && data.token){
+            localStorage.setItem("token",data.token)
+            localStorage.setItem("id",data.user._id)
+            console.log(data);
+        } 
+        alert(data.msg)
     }
 
     return(
